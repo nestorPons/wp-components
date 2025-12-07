@@ -72,9 +72,11 @@ $link = $args['link'];
     .service-icon-title a {
         text-decoration: none;
         color: #333;
+        transition: all 0.3s ease;
     }
 
     .service-icon-title a:hover {
         opacity: 0.7;
+        transform: scale(1.05);
     }
 </style>    
