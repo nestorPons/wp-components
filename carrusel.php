@@ -1,4 +1,22 @@
 <?php
+/**
+ * Carrusel component requirements
+ *
+ * PHP $args keys:
+ * - images(array<string>) URLs mostradas en el slider (obligatorio para contenido).
+ * - title(string) Título mostrado en la superposición.
+ * - subtitle(string) Subtítulo del carrusel.
+ * - buttons(array<['label','url','type']>) Botones opcionales; type acepta primary|secondary.
+ * - filters(array<string>) Permite aplicar efectos; actualmente soporta 'bw' (grayscale).
+ * - show_navs(bool) Controla visibilidad de flechas y puntos (true por defecto).
+ *
+ * CSS custom properties necesarias en el tema:
+ * - --max-width Ancho máximo del contenedor del slider.
+ * - --color-white Color base del texto y dots.
+ * - --color-tertiary Color para botón primary hover/border.
+ * - --color-secondary Color para botón secondary hover/border.
+ */
+
 $images = $args['images'] ?? [];
 $title = $args['title'] ?? '';
 $subtitle = $args['subtitle'] ?? '';
