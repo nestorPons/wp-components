@@ -41,6 +41,17 @@ $show_navs = $args['show_navs'] ?? true;
         <button class="slider-next <?= $show_navs ? "" : "hidden"; ?>">&#10095;</button>
     </div>
 
+    <?php if (count($images) > 1): ?>
+    <div class="slider-dots <?= $show_navs ? "" : "hidden"; ?>" role="tablist">
+        <?php foreach ($images as $index => $img): ?>
+            <button
+                class="slider-dot <?php echo $index === 0 ? 'active' : ''; ?>"
+                data-target="<?php echo esc_attr($index); ?>"
+                aria-label="<?php echo esc_attr(sprintf('Ir a la diapositiva %d', $index + 1)); ?>">
+            </button>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
 </div>
 <style>
 .slider-wrapper {
@@ -173,6 +184,32 @@ $show_navs = $args['show_navs'] ?? true;
 .slider-prev { left: 20px; }
 .slider-next { right: 20px; }
 
+.slider-dots {
+    position: absolute;
+    z-index: 25;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.slider-dot {
+    all: unset;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--color-white);
+    background: transparent;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+}
+
+.slider-dot.active {
+    background: var(--color-white);
+    transform: scale(1.2);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .slider-content {
@@ -198,27 +235,41 @@ $show_navs = $args['show_navs'] ?? true;
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let slides = document.querySelectorAll(".slider-slide");
+        let dots = document.querySelectorAll(".slider-dot");
         let current = 0;
 
         function showSlide(index) {
-            slides.forEach(s => s.classList.remove("active"));
-            slides[index].classList.add("active");
+            slides.forEach((s, i) => {
+                s.classList.toggle("active", i === index);
+            });
+            dots.forEach((d, i) => {
+                d.classList.toggle("active", i === index);
+            });
+            current = index;
         }
 
         document.querySelector(".slider-next").addEventListener("click", () => {
-            current = (current + 1) % slides.length;
-            showSlide(current);
+            showSlide((current + 1) % slides.length);
         });
 
         document.querySelector(".slider-prev").addEventListener("click", () => {
-            current = (current - 1 + slides.length) % slides.length;
-            showSlide(current);
+            showSlide((current - 1 + slides.length) % slides.length);
         });
 
-        setInterval(() => {
-            current = (current + 1) % slides.length;
-            showSlide(current);
-        }, 6000);
+        dots.forEach(dot => {
+            dot.addEventListener("click", () => {
+                const target = parseInt(dot.dataset.target, 10);
+                if (!Number.isNaN(target)) {
+                    showSlide(target);
+                }
+            });
+        });
+
+        if (slides.length > 1) {
+            setInterval(() => {
+                showSlide((current + 1) % slides.length);
+            }, 6000);
+        }
     });
 </script>
 
